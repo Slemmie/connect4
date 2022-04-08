@@ -4,7 +4,6 @@
 
 #include <iostream>
 #include <thread>
-#include <mutex>
 #include <shared_mutex>
 
 namespace gp {

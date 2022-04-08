@@ -34,7 +34,7 @@ release: ${OBJ_FILES}
 	g++ $(CXX_FLAGS) $< -o $@ $(CXX_RELEASE_FLAGS) -I ./vendor/bin/
 
 # debug target
-debug: ${OBJ_FILES}
+debug: ${DBG_OBJ_FILES}
 	g++ $(CXX_FLAGS) $^ -o connect4 $(CXX_DEBUG_FLAGS) $(LINKS)
 
 %_debug.o: %.cpp ${HDR_FILES}

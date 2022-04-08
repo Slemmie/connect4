@@ -1,7 +1,7 @@
 # makefile for building and/or exporting vendor modules
 # exports to ./bin/...
 
-## main target
+# main target
 all: glfw glew glm
 	git submodule deinit -f .
 	git submodule update --init .

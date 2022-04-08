@@ -11,11 +11,13 @@ CXX_RELEASE_FLAGS = -O2
 CXX_DEBUG_FLAGS = -g -fsanitize=address -fsanitize=undefined -D_GLIBCXX_DEBUG
 
 # collect files in lists
-SRC_FILES =             \
-$(wildcard ./src/*.cpp)
+SRC_FILES =                      \
+$(wildcard ./src/*.cpp)          \
+$(wildcard ./src/graphics/*.cpp) \
 
-HDR_FILES =           \
-$(wildcard ./src/*.h)
+HDR_FILES =                    \
+$(wildcard ./src/*.h)          \
+$(wildcard ./src/graphics/*.h)
 
 OBJ_FILES = ${SRC_FILES:.cpp=.o}
 DBG_OBJ_FILES = ${SRC_FILES:.cpp=_debug.o}
@@ -31,11 +33,16 @@ release: ${OBJ_FILES}
 	g++ $(CXX_FLAGS) $^ -o connect4 $(CXX_RELEASE_FLAGS) $(LINKS)
 
 %.o: %.cpp ${HDR_FILES}
-	g++ $(CXX_FLAGS) $< -o $@ $(CXX_RELEASE_FLAGS) -I ./vendor/bin/
+	g++ $(CXX_FLAGS) $< -c -o $@ $(CXX_RELEASE_FLAGS) -I ./vendor/bin/
 
 # debug target
 debug: ${DBG_OBJ_FILES}
 	g++ $(CXX_FLAGS) $^ -o connect4 $(CXX_DEBUG_FLAGS) $(LINKS)
 
 %_debug.o: %.cpp ${HDR_FILES}
-	g++ $(CXX_FLAGS) $< -o $@ $(CXX_DEBUG_FLAGS) -I ./vendor/bin/
+	g++ $(CXX_FLAGS) $< -c -o $@ $(CXX_DEBUG_FLAGS) -I ./vendor/bin/
+
+# clean target for command line access
+.PHONY: clean
+clean:
+	find . -name *.o -delete

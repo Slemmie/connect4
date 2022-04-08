@@ -16,4 +16,12 @@ namespace gp {
 	// should be called by the same thread that called gp::init()
 	void terminate();
 	
+	// getters
+	GLFWwindow* get_window_handle();
+	int get_framebuffer_width();
+	int get_framebuffer_height();
+	
+	// setters
+	void set_window_size(const int width, const int height);
+	
 } /// namespace gp

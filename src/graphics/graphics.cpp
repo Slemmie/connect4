@@ -5,6 +5,7 @@
 #include <iostream>
 #include <thread>
 #include <mutex>
+#include <shared_mutex>
 
 namespace gp {
 	
@@ -18,12 +19,17 @@ namespace gp {
 	bool is_terminated = false;
 	std::thread::id thread_id_of_init_caller;
 	
-	// mutex for gp::init()/gp::terminate() safety
-	std::mutex constr_mutex;
+	// mutex for keeping variables/library calls/etc. safe
+	// will be acquired as a shared lock in some places
+	std::shared_mutex mutex;
+	
+	// only ever called by gp::init()
+	// is local to the current translation unit
+	void set_glfw_callbacks();
 	
 	void init() {
 		// be safe in case gp::init() and/or gp::terminate() somehow gets called simultaneously/more than once
-		std::lock_guard <std::mutex> lock(constr_mutex);
+		std::unique_lock lock(mutex);
 		
 		// make sure the gp::init() call is legal
 		// must not already be initialized + must not be terminated previously
@@ -79,10 +85,17 @@ namespace gp {
 		// enable vertical sync by default
 		glfwSwapInterval(1);
 		
-		// set glfw callbacks
+		set_glfw_callbacks();
+	}
+	
+	void set_glfw_callbacks() {
 		// framebuffer resized
 		glfwSetFramebufferSizeCallback(window_handle,
 		[] (GLFWwindow* w_handle, int width, int height) -> void {
+			// keep modified variables safe
+			std::unique_lock lock(mutex);
+			
+			// resize gl viewport and update variables
 			glViewport(0, 0, framebuffer_width = width, framebuffer_height = height);
 			glfwGetWindowSize(w_handle, &window_width, &window_height);
 		});
@@ -90,7 +103,7 @@ namespace gp {
 	
 	void terminate() {
 		// be safe in case gp::init() and/or gp::terminate() somehow gets called simultaneously/more than once
-		std::lock_guard <std::mutex> lock(constr_mutex);
+		std::unique_lock lock(mutex);
 		
 		// make sure the gp::terminate() call is legal
 		// must not be called without a previous call to gp::init() + must not re-terminate
@@ -112,6 +125,69 @@ namespace gp {
 		
 		// terminate glfw
 		glfwTerminate();
+	}
+	
+	// getters and setters
+	
+	GLFWwindow* get_window_handle() {
+		return window_handle;
+	}
+	
+	int get_framebuffer_width() {
+		// keep the variables modified in glfw callbacks safe
+		std::shared_lock lock(mutex);
+		
+		// make sure gp::init() has been called and gp::terminate() has not been called
+		if (!is_initialized || is_terminated) {
+			std::cerr << "[warning]: framebuffer width query ignored as " <<
+			(is_terminated ?
+			"graphics have been destructed" :
+			"graphics have not been initialized") << std::endl;
+			return 0;
+		}
+		
+		return framebuffer_width;
+	}
+	
+	int get_framebuffer_height() {
+		// keep the variables modified in glfw callbacks safe
+		std::shared_lock lock(mutex);
+		
+		// make sure gp::init() has been called and gp::terminate() has not been called
+		if (!is_initialized || is_terminated) {
+			std::cerr << "[warning]: framebuffer height query ignored as " <<
+			(is_terminated ?
+			"graphics have been destructed" :
+			"graphics have not been initialized") << std::endl;
+			return 0;
+		}
+		
+		return framebuffer_height;
+	}
+	
+	void set_window_size(const int width, const int height) {
+		// keep the variables modified in glfw callbacks safe
+		std::unique_lock lock(mutex);
+		
+		// make sure gp::init() has been called and gp::terminate() has not been called
+		if (!is_initialized || is_terminated) {
+			std::cerr << "[warning]: window resize request ignored as " <<
+			(is_terminated ?
+			"graphics have been destructed" :
+			"graphics have not been initialized") << std::endl;
+			return;
+		}
+		
+		// glfwSetWindowSize(...) must only be called from the context bound thread
+		if (std::this_thread::get_id() != thread_id_of_init_caller) {
+			std::cerr <<
+			"[warning]: window resize request ignored as it was called from an incompatible thread"
+			<< std::endl;
+			return;
+		}
+		
+		// framebuffer resize callback will be launched and variables are updated there
+		glfwSetWindowSize(window_handle, width, height);
 	}
 	
 } /// namespace gp

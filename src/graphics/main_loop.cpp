@@ -2,6 +2,8 @@
 
 #include "main_loop.h"
 
+#include "swap_window_buffers.h"
+
 #include <glew/glew.h>
 #include <glfw/glfw3.h>
 

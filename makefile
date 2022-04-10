@@ -15,9 +15,11 @@ SRC_FILES =                      \
 $(wildcard ./src/*.cpp)          \
 $(wildcard ./src/graphics/*.cpp) \
 
-HDR_FILES =                    \
-$(wildcard ./src/*.h)          \
-$(wildcard ./src/graphics/*.h)
+HDR_FILES =                      \
+$(wildcard ./src/*.h)            \
+$(wildcard ./src/*.hpp)          \
+$(wildcard ./src/graphics/*.h)   \
+$(wildcard ./src/graphics/*.hpp)
 
 OBJ_FILES = ${SRC_FILES:.cpp=.o}
 DBG_OBJ_FILES = ${SRC_FILES:.cpp=_debug.o}

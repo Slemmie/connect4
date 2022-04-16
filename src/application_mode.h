@@ -9,4 +9,4 @@ enum Application_mode {
 	APP_MODE_GAME = 2, // actual game
 	APP_MODE_OVER = 3  // game is won/lost/drawn
 	
-} app_mode = APP_MODE_NONE;
+} APP_MODE = APP_MODE_NONE;

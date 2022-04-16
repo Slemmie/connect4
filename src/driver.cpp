@@ -6,7 +6,7 @@
 int main() {
 	gp::init();
 	
-	app_mode = APP_MODE_MENU;
+	APP_MODE = APP_MODE_MENU;
 	gp::Main_loop::launch([] () -> bool { return true; });
 	
 	gp::terminate();

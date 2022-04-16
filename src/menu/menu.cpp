@@ -2,6 +2,6 @@
 
 #include "menu.h"
 
-bool Main_menu::frame()  {
+bool Main_menu::frame() const {
 	return true;
 }

@@ -8,6 +8,6 @@ class Main_menu {
 	
 public:
 	
-	bool frame() ;
+	bool frame() const;
 	
 };

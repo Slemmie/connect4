@@ -14,12 +14,15 @@ CXX_DEBUG_FLAGS = -g -fsanitize=address -fsanitize=undefined -D_GLIBCXX_DEBUG
 SRC_FILES =                      \
 $(wildcard ./src/*.cpp)          \
 $(wildcard ./src/graphics/*.cpp) \
+$(wildcard ./src/menu/*.cpp)
 
 HDR_FILES =                      \
 $(wildcard ./src/*.h)            \
 $(wildcard ./src/*.hpp)          \
 $(wildcard ./src/graphics/*.h)   \
-$(wildcard ./src/graphics/*.hpp)
+$(wildcard ./src/graphics/*.hpp) \
+$(wildcard ./src/menu/*.h)       \
+$(wildcard ./src/menu/*.hpp)
 
 OBJ_FILES = ${SRC_FILES:.cpp=.o}
 DBG_OBJ_FILES = ${SRC_FILES:.cpp=_debug.o}

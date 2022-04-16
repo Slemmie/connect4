@@ -9,4 +9,7 @@ enum Application_mode {
 	APP_MODE_GAME = 2, // actual game
 	APP_MODE_OVER = 3  // game is won/lost/drawn
 	
-} APP_MODE = APP_MODE_NONE;
+};
+
+// singular variable telling any part of the application what mode is currently active
+extern Application_mode APP_MODE;

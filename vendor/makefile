@@ -2,7 +2,7 @@
 # exports to ./bin/...
 
 # main target
-all: glfw glew glm
+all: glfw glew glm stb_image
 	git submodule deinit -f .
 	git submodule update --init .
 
@@ -47,3 +47,9 @@ glm:
 	fi;
 	if [ ! -d "./bin/glm/include/" ]; then mkdir -p ./bin/glm/; fi;
 	cp -r ./glm/glm/* ./bin/glm/
+
+# exports stb_image header
+.PHONY: stb_image
+stb_image:
+	if [ ! -d "./bin/stb_image/" ]; then mkdir -p ./bin/stb_image/; fi;
+	curl https://raw.githubusercontent.com/nothings/stb/master/stb_image.h > ./bin/stb_image/stb_image.h

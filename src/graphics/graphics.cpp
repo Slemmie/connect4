@@ -164,6 +164,22 @@ namespace gp {
 		return framebuffer_height;
 	}
 	
+	double get_mouse_x() {
+		double x, y;
+		glfwGetCursorPos(window_handle, &x, &y);
+		return x;
+	}
+	
+	double get_mouse_y() {
+		double x, y;
+		glfwGetCursorPos(window_handle, &x, &y);
+		return y;
+	}
+	
+	double get_time() {
+		return glfwGetTime();
+	}
+	
 	void set_window_size(const int width, const int height) {
 		// keep the variables modified in glfw callbacks safe
 		std::unique_lock lock(mutex);

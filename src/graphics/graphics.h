@@ -22,6 +22,9 @@ namespace gp {
 	GLFWwindow* get_window_handle();
 	int get_framebuffer_width();
 	int get_framebuffer_height();
+	double get_mouse_x();
+	double get_mouse_y();
+	double get_time();
 	
 	// setters
 	// must be called by the thread that called gp::init()

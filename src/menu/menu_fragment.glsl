@@ -1,3 +1,5 @@
+// glsl fragment shader for menu background
+
 #version 460 core
 
 in vec2 frag_pos;
@@ -16,8 +18,8 @@ void main() {
 		return;
 	}
 	
-	float x = frag_pos.x * 600.0f;
-	float y = frag_pos.y * 600.0f;
+	float x = frag_pos.x * 300.0f;
+	float y = frag_pos.y * 300.0f;
 	for (int i = -1; i < 1; i++) {
 		for (int j = -1; j < 1; j++) {
 			if (i == 0 && j == 0) {

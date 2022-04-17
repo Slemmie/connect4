@@ -26,7 +26,7 @@ namespace gp {
 		
 		~Rect();
 		
-		void render() const;
+		void render();
 		
 	private:
 		
@@ -36,6 +36,12 @@ namespace gp {
 		
 		// vertex array id, buffers ids
 		unsigned int m_vao, m_vbo, m_ebo;
+		
+		double m_top, m_bot, m_left, m_right;
+		
+		double m_prev_time;
+		double m_hover_time;
+		bool m_is_hovering;
 		
 	};
 	

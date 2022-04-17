@@ -181,6 +181,8 @@ namespace gp {
 			m_hover_time += get_time() - m_prev_time;
 		}
 		m_shader->set_uniform_1f("u_hover_time", m_hover_time);
+		// also set mouse position
+		m_shader->set_uniform_2f("u_mouse_pos", (float) mouse_x, (float) mouse_y);
 		
 		// generate orthographic projection matrix
 		glm::mat4 proj = glm::ortho(

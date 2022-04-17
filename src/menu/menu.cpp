@@ -25,13 +25,6 @@ Main_menu::Main_menu() {
 }
 
 bool Main_menu::frame() const {
-	// set current mouse position as a uniform variable for the shaders to use
-	double mouse_x = gp::get_mouse_x();
-	double mouse_y = gp::get_mouse_y();
-	m_button_shader->bind();
-	m_button_shader->set_uniform_2f("u_mouse_pos", (float) mouse_x, (float) mouse_y);
-	m_button_shader->unbind();
-	
 	m_rect->render();
 	
 	m_rect_1player->render();

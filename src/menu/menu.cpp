@@ -2,8 +2,6 @@
 
 #include "menu.h"
 
-#include "../graphics/graphics.h"
-
 Main_menu::Main_menu() {
 	m_shader = std::make_shared <gp::Shader> ();
 	m_shader->add_source(gp::SHADER_TYPE_VERTEX, "src/menu/menu_vertex.glsl");

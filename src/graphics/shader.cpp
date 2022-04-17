@@ -136,7 +136,8 @@ namespace gp {
 		unsigned int id = glCreateShader(shader_type);
 		
 		// load buffer
-		glShaderSource(id, 1, (const GLchar* const*) source.c_str(), nullptr);
+		const char* cbuf = source.c_str();
+		glShaderSource(id, 1, &cbuf, nullptr);
 		
 		// compile buffer
 		glCompileShader(id);
@@ -151,7 +152,7 @@ namespace gp {
 			std::string err_msg(err_msg_len, '\0');
 			glGetShaderInfoLog(id, err_msg_len, &err_msg_len, err_msg.data());
 			std::cerr << "[warning]: " << m_shader_type_string(shader_type) <<
-			"shader compilation failed: " << err_msg << std::endl;
+			" shader compilation failed: " << err_msg << std::endl;
 			glDeleteShader(id);
 			return ~0u;
 		}

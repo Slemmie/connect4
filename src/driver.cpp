@@ -12,7 +12,8 @@ int main() {
 	gp::init();
 	
 	APP_MODE = APP_MODE_MENU;
-	gp::Main_loop::launch(std::bind(&Main_menu::frame, Main_menu()));
+	Main_menu main_menu;
+	gp::Main_loop::launch([&main_menu] () -> bool { return main_menu.frame(); });
 	
 	gp::terminate();
 }

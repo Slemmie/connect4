@@ -22,4 +22,7 @@ private:
 	std::shared_ptr <gp::Shader> m_background_shader;
 	std::unique_ptr <gp::Rect> m_background_rect;
 	
+	std::shared_ptr <gp::Shader> m_board_shader;
+	std::unique_ptr <gp::Rect> m_board_rect;
+	
 };

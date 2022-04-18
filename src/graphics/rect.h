@@ -28,7 +28,13 @@ namespace gp {
 		
 		void render();
 		
+		inline void make_square() {
+			m_is_square = true;
+		}
+		
 	private:
+		
+		bool m_is_square;
 		
 		std::shared_ptr <Shader> m_shader;
 		

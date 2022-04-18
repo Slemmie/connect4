@@ -9,6 +9,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <utility>
+#include <iostream>
 
 namespace gp {
 	
@@ -22,6 +23,7 @@ namespace gp {
 	
 	Rect::Rect(const std::shared_ptr <Shader>& _shader,
 	double _top, double _bot, double _left, double _right) :
+	m_is_square(false),
 	m_shader(_shader),
 	m_texture(nullptr),
 	m_vao(0),
@@ -82,6 +84,7 @@ namespace gp {
 	
 	Rect::Rect(const std::shared_ptr <Shader>& _shader, const std::shared_ptr <Texture>& _texture,
 	double _top, double _bot, double _left, double _right) :
+	m_is_square(false),
 	m_shader(_shader),
 	m_texture(_texture),
 	m_vao(0),
@@ -152,6 +155,24 @@ namespace gp {
 	}
 	
 	void Rect::render() {
+		// resize top/bot/left/right variables if the rectangle needs to be a square
+		if (m_is_square) {
+			float win_asp = (float) framebuffer_width / (float) framebuffer_height;
+			if (win_asp > 1.0f) { // snap to window height
+				m_top = -1;
+				m_bot = 1;
+				float len = 1.0f / win_asp;
+				m_left = -len / 2.0f;
+				m_right = len / 2.0f;
+			} else { // snap to window width
+				m_left = -1;
+				m_right = 1;
+				float len = win_asp;
+				m_top = -len / 2.0f;
+				m_bot = len / 2.0f;
+			}
+		}
+		
 		// bind shader program and vertex array
 		m_shader->bind();
 		if (m_texture) {
@@ -196,6 +217,19 @@ namespace gp {
 		glm::mat4 model(1.0f);
 		model = glm::scale(model, glm::vec3(float(framebuffer_width) * 0.5f,
 		float(framebuffer_height) * 0.5f, 1.0f));
+		// redo if we are a square
+		if (m_is_square) {
+			float win_asp = (float) framebuffer_width / (float) framebuffer_height;
+			if (win_asp > 1.0f) {
+				model = glm::scale(glm::mat4(1.0f), glm::vec3(
+				float(framebuffer_height) / 2.0f,
+				float(framebuffer_height) / 2.0f, 1.0f));
+			} else {
+				model = glm::scale(glm::mat4(1.0f), glm::vec3(
+				float(framebuffer_width) / 2.0f,
+				float(framebuffer_width) / 2.0f, 1.0f));
+			}
+		}
 		m_shader->set_uniform_mat4("u_model", model);
 		
 		// draw call

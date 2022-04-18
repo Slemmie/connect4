@@ -82,6 +82,10 @@ namespace gp {
 		glfwGetFramebufferSize(window_handle, &framebuffer_width, &framebuffer_height);
 		glViewport(0, 0, framebuffer_width, framebuffer_height);
 		
+		// enable blending used whenever multiple window buffers render atop each other
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		
 		// enable vertical sync by default
 		glfwSwapInterval(1);
 		

@@ -6,6 +6,7 @@
 
 #include "../graphics/shader.h"
 #include "../graphics/rect.h"
+#include "../game/game.h"
 
 #include <memory>
 
@@ -15,7 +16,7 @@ public:
 	
 	Main_menu();
 	
-	bool frame() const;
+	bool frame();
 	
 private:
 	
@@ -27,5 +28,11 @@ private:
 	std::shared_ptr <gp::Texture> m_button_2player;
 	std::unique_ptr <gp::Rect> m_rect_1player;
 	std::unique_ptr <gp::Rect> m_rect_2player;
+	
+	std::unique_ptr <Game> m_game;
+	
+private:
+	
+	void check_if_pressed(int button, double x, double y);
 	
 };

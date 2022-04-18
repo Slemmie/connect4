@@ -8,6 +8,8 @@
 #include <glew/glew.h>
 #include <glfw/glfw3.h>
 
+#include <functional>
+
 namespace gp {
 	
 	// must be called exactly once
@@ -17,6 +19,11 @@ namespace gp {
 	// must be called exactly once
 	// should be called by the same thread that called gp::init()
 	void terminate();
+	
+	// callbacks
+	// a variable number of functions can be bound to a single event at any time
+	// push_callback_mouse_press -> button, x, y
+	void push_callback_mouse_press(const std::function <void (int, double, double)>& func);
 	
 	// getters
 	GLFWwindow* get_window_handle();

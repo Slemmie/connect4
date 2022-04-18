@@ -5,6 +5,7 @@
 #include <iostream>
 #include <thread>
 #include <shared_mutex>
+#include <vector>
 
 namespace gp {
 	
@@ -87,6 +88,8 @@ namespace gp {
 		set_glfw_callbacks();
 	}
 	
+	std::vector <std::function <void (int, double, double)>> mouse_press_callback_funcs;
+	
 	void set_glfw_callbacks() {
 		// framebuffer resized
 		glfwSetFramebufferSizeCallback(window_handle,
@@ -97,6 +100,35 @@ namespace gp {
 			// resize gl viewport and update variables
 			glViewport(0, 0, framebuffer_width = width, framebuffer_height = height);
 			glfwGetWindowSize(w_handle, &window_width, &window_height);
+		});
+		
+		// mouse pressed
+		glfwSetMouseButtonCallback(window_handle,
+		[] (GLFWwindow* w_handle, int button, int action, int mods) -> void {
+			if (action != GLFW_PRESS) {
+				return;
+			}
+			
+			// do not deal with recursive mutexes
+			// make a safe copy of the current set of functions
+			std::vector <std::function <void (int, double, double)>> safe_copy;
+			{
+				std::unique_lock lock(mutex);
+				safe_copy = mouse_press_callback_funcs;
+			}
+			
+			// standardized button codes for now
+			int code = 0;
+			switch(button) {
+				case GLFW_MOUSE_BUTTON_LEFT   : code = 1; break;
+				case GLFW_MOUSE_BUTTON_RIGHT  : code = 2; break;
+				case GLFW_MOUSE_BUTTON_MIDDLE : code = 3; break;
+				default: break;
+			};
+			
+			for (const auto& func : safe_copy) {
+				func(code, get_mouse_x(), get_mouse_y());
+			}
 		});
 	}
 	
@@ -124,6 +156,12 @@ namespace gp {
 		
 		// terminate glfw
 		glfwTerminate();
+	}
+	
+	void push_callback_mouse_press(const std::function <void (int, double, double)>& func) {
+		std::unique_lock lock(mutex);
+		
+		mouse_press_callback_funcs.emplace_back(func);
 	}
 	
 	// getters and setters

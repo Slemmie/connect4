@@ -14,7 +14,8 @@ CXX_DEBUG_FLAGS = -g -fsanitize=address -fsanitize=undefined -D_GLIBCXX_DEBUG
 SRC_FILES =                      \
 $(wildcard ./src/*.cpp)          \
 $(wildcard ./src/graphics/*.cpp) \
-$(wildcard ./src/menu/*.cpp)
+$(wildcard ./src/menu/*.cpp)     \
+$(wildcard ./src/game/*.cpp)
 
 HDR_FILES =                      \
 $(wildcard ./src/*.h)            \
@@ -22,7 +23,9 @@ $(wildcard ./src/*.hpp)          \
 $(wildcard ./src/graphics/*.h)   \
 $(wildcard ./src/graphics/*.hpp) \
 $(wildcard ./src/menu/*.h)       \
-$(wildcard ./src/menu/*.hpp)
+$(wildcard ./src/menu/*.hpp)     \
+$(wildcard ./src/game/*.h)       \
+$(wildcard ./src/game/*.hpp)
 
 OBJ_FILES = ${SRC_FILES:.cpp=.o}
 DBG_OBJ_FILES = ${SRC_FILES:.cpp=_debug.o}

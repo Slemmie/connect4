@@ -3,7 +3,7 @@
 #version 460 core
 
 const float holes_x[7] = {
-	0.14, 0.26, 0.38, 0.5, 0.62, 0.74, 0.86,
+	0.14, 0.26, 0.38, 0.5, 0.62, 0.74, 0.86
 };
 
 const float holes_y[6] = {
@@ -22,6 +22,14 @@ uniform float u_right;
 
 uniform uint u_col0123;
 uniform uint u_col456;
+
+uniform uint u_hover_col;
+uniform uint u_turn;
+
+uniform uvec4 u_winning_tiles;
+
+uniform float u_time;
+uniform float u_game_over_timestamp;
 
 in vec2 frag_pos;
 in vec2 local_pos;
@@ -105,6 +113,23 @@ void main() {
 			int c = i % 7;
 			uint cmask = ((c < 4 ? (u_col0123 >> (c * 7)) : (u_col456 >> ((c - 4) * 7)))) & ((1 << 7) - 1);
 			int r = i / 7;
+			if (u_winning_tiles[0] != u_winning_tiles[1]) {
+				bool is_blink = false;
+				for (int k = 0; k < 4; k++) {
+					if (u_winning_tiles[k] == c * 7 + r) {
+						float time = u_time - u_game_over_timestamp;
+						time *= 2.0f;
+						uint itime = uint(time);
+						if (itime % 2 == 1) {
+							is_blink = true;
+							col = vec4(0.0f);
+						}
+					}
+				}
+				if (is_blink) {
+					continue;
+				}
+			}
 			for (int j = 0; j < r; j++) {
 				cmask >>= 1;
 			}
@@ -113,6 +138,12 @@ void main() {
 					col = vec4(0.8f, 0.1f, 0.2f, 0.9f);
 				} else {
 					col = vec4(0.2f, 0.1f, 0.8f, 0.9f);
+				}
+			} else if (u_turn != 2 && cmask == 1 && u_hover_col == c) {
+				if (u_turn == 0) {
+					col = vec4(0.8f, 0.1f, 0.2f, 0.17f);
+				} else {
+					col = vec4(0.2f, 0.1f, 0.8f, 0.17f);
 				}
 			} else {
 				col = vec4(0.0f);

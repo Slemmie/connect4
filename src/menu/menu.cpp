@@ -39,7 +39,14 @@ bool Main_menu::frame() {
 	return true;
 }
 
+extern Application_mode APP_MODE;
+
 void Main_menu::check_if_pressed(int button, double x, double y) {
+	// do not do anything if the menu is not in focus at the moment
+	if (APP_MODE != APP_MODE_MENU) {
+		return;
+	}
+	
 	// only consider the button press if it was the left button
 	if (button != 1) {
 		return;

@@ -32,6 +32,11 @@ namespace gp {
 			m_is_square = true;
 		}
 		
+		constexpr double top() const { return m_top; }
+		constexpr double bot() const { return m_bot; }
+		constexpr double left() const { return m_left; }
+		constexpr double right() const { return m_right; }
+		
 	private:
 		
 		bool m_is_square;

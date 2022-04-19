@@ -49,7 +49,7 @@ bool Game::frame() {
 	m_board_shader->set_uniform_1ui("u_col0123", col0123);
 	m_board_shader->set_uniform_1ui("u_col456", col456);
 	// set a uniform telling where to potentially highlight
-	if ((!m_board.get_turn() && !m_is_one_player) || APP_MODE != APP_MODE_GAME) {
+	if ((m_board.get_turn() && m_is_one_player) || APP_MODE != APP_MODE_GAME) {
 		m_board_shader->set_uniform_1ui("u_hover_col", 0);
 		m_board_shader->set_uniform_1ui("u_turn", 2);
 	} else {
@@ -160,7 +160,7 @@ void Game::m_mouse_press(int button, double x, double y) {
 	}
 	
 	// only make the move if it is a human players turn
-	if (!m_board.get_turn() && !m_is_one_player) {
+	if (m_board.get_turn() && m_is_one_player) {
 		return;
 	}
 	

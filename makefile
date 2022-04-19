@@ -5,6 +5,10 @@
 all: release
 	find . -name *.o -delete
 
+# helper target for building/exporting dependencies
+deps:
+	cd vendor && make
+
 # c++ flags
 CXX_FLAGS = -Wshadow -Wall -std=c++17
 CXX_RELEASE_FLAGS = -O2
@@ -15,7 +19,9 @@ SRC_FILES =                      \
 $(wildcard ./src/*.cpp)          \
 $(wildcard ./src/graphics/*.cpp) \
 $(wildcard ./src/menu/*.cpp)     \
-$(wildcard ./src/game/*.cpp)
+$(wildcard ./src/game/*.cpp)     \
+$(wildcard ./src/util/*.cpp)     \
+$(wildcard ./src/AI/*.cpp)
 
 HDR_FILES =                      \
 $(wildcard ./src/*.h)            \
@@ -25,7 +31,11 @@ $(wildcard ./src/graphics/*.hpp) \
 $(wildcard ./src/menu/*.h)       \
 $(wildcard ./src/menu/*.hpp)     \
 $(wildcard ./src/game/*.h)       \
-$(wildcard ./src/game/*.hpp)
+$(wildcard ./src/game/*.hpp)     \
+$(wildcard ./src/util/*.h)       \
+$(wildcard ./src/util/*.hpp)     \
+$(wildcard ./src/AI/*.h)         \
+$(wildcard ./src/AI/*.hpp)
 
 OBJ_FILES = ${SRC_FILES:.cpp=.o}
 DBG_OBJ_FILES = ${SRC_FILES:.cpp=_debug.o}

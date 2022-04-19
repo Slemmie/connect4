@@ -16,6 +16,10 @@ namespace gp {
 	// should be called by the thread expecting to communicate with the gp namespace
 	void init();
 	
+	// can be called from anywhere, from any thread
+	// push a function to a list of functions called right before terminating
+	void on_terminate(const std::function <void ()>& func);
+	
 	// must be called exactly once
 	// should be called by the same thread that called gp::init()
 	void terminate();

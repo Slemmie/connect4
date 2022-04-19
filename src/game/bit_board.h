@@ -128,6 +128,11 @@ public:
 		return !((bb::row[5] & bb::col[col]) & m_both);
 	}
 	
+	// make a null move / flip active ones and zeroes
+	inline void flip() {
+		m_board ^= m_both;
+	}
+	
 private:
 	
 	bit_board m_board;

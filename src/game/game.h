@@ -10,6 +10,8 @@
 #include "bit_board.h"
 
 #include <memory>
+#include <atomic>
+#include <thread>
 
 class Game {
 	
@@ -40,5 +42,12 @@ private:
 private:
 	
 	Board m_board;
+	
+private:
+	
+	std::atomic <bool> m_is_AI_searching = false;
+	std::atomic <bool> m_is_AI_done = false;
+	Board m_board_AI_result;
+	std::unique_ptr <std::thread> m_AI_thread = nullptr;
 	
 };

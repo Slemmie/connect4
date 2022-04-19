@@ -3,8 +3,9 @@
 #include "game.h"
 
 #include "../graphics/graphics.h"
+#include "../AI/AI.h"
 
-#include <iostream>
+#include <cassert>
 
 Game::Game(bool _is_one_player) :
 m_is_one_player(_is_one_player)
@@ -33,11 +34,24 @@ m_is_one_player(_is_one_player)
 	// set mouse press callback
 	gp::push_callback_mouse_press([this] (int button, double x, double y) ->
 	void { this->m_mouse_press(button, x, y); });
+	
+	// set a callback to on_terminate
+	gp::on_terminate([this] () -> void {
+		if (m_AI_thread) {
+			m_is_AI_done = true;
+			m_AI_thread->join();
+			m_AI_thread.reset(nullptr);
+		}
+	});
 }
 
 extern Application_mode APP_MODE;
 
 bool Game::frame() {
+	if (APP_MODE != APP_MODE_GAME) {
+		assert(!m_AI_thread);
+	}
+	
 	m_background_rect->render();
 	
 	// set the current board as a uniform variable
@@ -125,6 +139,24 @@ bool Game::frame() {
 				m_winning_tiles[2] = __builtin_ctzll(b) + 12;
 				m_winning_tiles[3] = __builtin_ctzll(b) + 18;
 			}
+		}
+	}
+	
+	// if it is the AIs turn, either start the search or check if it has finished
+	if (m_board.get_turn() && m_is_one_player && APP_MODE == APP_MODE_GAME) {
+		if (!m_is_AI_searching) {
+			m_is_AI_done = false;
+			m_is_AI_searching = true;
+			// spawn thread
+			m_AI_thread = std::make_unique <std::thread> ([this] () -> void {
+				AI ai(1000 * 1000, m_board, m_board_AI_result, m_is_AI_done);
+			});
+		} else if (m_is_AI_done) {
+			// make sure thread is joined
+			m_AI_thread->join();
+			m_AI_thread.reset(nullptr);
+			m_is_AI_searching = false;
+			m_board = m_board_AI_result;
 		}
 	}
 	

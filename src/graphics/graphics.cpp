@@ -136,6 +136,13 @@ namespace gp {
 		});
 	}
 	
+	std::vector <std::function <void ()>> on_terminate_funcs;
+	
+	void on_terminate(const std::function <void ()>& func) {
+		std::unique_lock lock(mutex);
+		on_terminate_funcs.emplace_back(func);
+	}
+	
 	void terminate() {
 		// be safe in case gp::init() and/or gp::terminate() somehow gets called simultaneously/more than once
 		std::unique_lock lock(mutex);
@@ -151,6 +158,12 @@ namespace gp {
 		// log a warning if current thread does not match that of the gp::init() caller
 		if (std::this_thread::get_id() != thread_id_of_init_caller) {
 			std::cerr << "[warning]: gp::init()/gp::terminate() thread mismatch" << std::endl;
+		}
+		
+		// before terminating anything:
+		// call all the on_terminate functions
+		for (const auto& func : on_terminate_funcs) {
+			func();
 		}
 		
 		// destroy glfw window handle

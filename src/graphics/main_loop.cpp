@@ -21,7 +21,7 @@ namespace gp {
 			
 			continue_loop &= m_frame_callback();
 			
-			glfwSwapBuffers(window_handle);
+			swap_window_buffers(window_handle);
 			
 			glfwPollEvents();
 		}
